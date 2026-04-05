@@ -9,8 +9,18 @@
         /* Part 3: Your styling goes here */
     </style>
     <script>
-        function reverseString(s) {
-            return s.split("").reverse().join("");
+        function CreditFormatter(article, title, people){
+            const h3 = document.createElement("h3");
+            h3.textContent = title;
+            article.append(h3);
+
+            const ul = document.createElement("ul");
+            people.forEach(p => {
+                const li = document.createElement("li");
+                li.textContent = p;
+                ul.append(li);
+            });
+            article.append(ul);
         }
 
         window.onload = function () {
@@ -19,8 +29,60 @@
                 const bodyElement = document.querySelector("body")
                 if (xhr.status == 200) {
 		            /* Part 2: Build the HTML elements here and append them to the body */ 
-                    bodyElement.append(reverseString(xhr.responseText))
+                    const movies = JSON.parse(xhr.responseText);
+
+                    movies.forEach(movie => {
+
+                        const article = document.createElement("article");
+
+                        //Poster
+                        const poster = document.createElement("img");
+                        poster.src = movie.Poster;
+                        article.append(poster);
+
+                        //Titel
+                        const title = document.createElement("h2");
+                        title.textContent = movie.Title;
+                        article.append(title);
+                        
+                        //Runtime and Release date
+                        const info = document.createElement("p");
+                        if(movie.Runtime>=60){
+                            returnHour = Math.floor(movie.Runtime / 60);
+                            returnMin = movie.Runtime % 60;
+                            info.append(`Runtime ${returnHour}h ${returnMin}m`)
+                        }else{
+                            info.append(`Runtime ${movie.Runtime}m`)
+                        }
+                        info.append(`\u2022 Released on ${movie.Released}`);
+                        article.append(info);
+
+                        //Genres
+                        const genre = document.createElement("p");
+                        movie.Genres.forEach(genreName => {
+                            const span = document.createElement("span");
+                            span.className = "genre";
+                            span.textContent = genreName;
+                            genre.append(span);
+                        });
+                        article.append(genre);
+
+                        //Plot
+                        const plot = document.createElement("p");
+                        plot.textContent = movie.Plot;
+                        article.append(plot);
+
+                        //Credits
+                        CreditFormatter(article, "Directors", movie.Directors)
+                        CreditFormatter(article, "Writers", movie.Writers)
+                        CreditFormatter(article, "Actors", movie.Actors)
+
+                        bodyElement.append(article);  
+                    });
+
+                    
                 } else {
+                    console.log("FAIL")
                     bodyElement.append("Daten konnten nicht geladen werden, Status " + xhr.status + " - " + xhr.statusText)
                 }
             }
