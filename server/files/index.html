@@ -7,6 +7,51 @@
     <title>Movies!</title>
     <style>
         /* Part 3: Your styling goes here */
+        body{
+            font-family:"Comic Sans MS",VERDANA,ARIAL,HELVETICA;
+            color: black;
+        }
+
+        img{
+            border-radius: 5%;
+            width: 50%;
+            height: 50%;
+            max-width: 400px;
+        }
+        img:hover{
+            transform: scale(1.01);
+        }
+
+        h1{
+            font-weight: bold;
+            margin: auto;
+            text-align: center;
+        }
+        article{
+            color: white;
+            background-color: #4a412a;
+            border-radius: 5%;
+            margin: 50px;
+            padding: 5%;
+            box-shadow: 10px 5px 5px grey;
+        }
+        span{
+            margin-right: 5px;
+        }
+        span.genre{
+            background-color: #4a41ff;
+            padding: 5px;
+            border-radius: 20px;
+            border: red;
+            border-width: 10px;
+            display: inline-block;
+            color: white;
+        }
+        span.genre:hover{
+            background-color: black;
+            transform: scale(2);
+        }
+
     </style>
     <script>
         function CreditFormatter(article, title, people){
@@ -48,13 +93,13 @@
                         //Runtime and Release date
                         const info = document.createElement("p");
                         if(movie.Runtime>=60){
-                            returnHour = Math.floor(movie.Runtime / 60);
-                            returnMin = movie.Runtime % 60;
+                            let returnHour = Math.floor(movie.Runtime / 60);
+                            let returnMin = movie.Runtime % 60;
                             info.append(`Runtime ${returnHour}h ${returnMin}m`)
                         }else{
                             info.append(`Runtime ${movie.Runtime}m`)
                         }
-                        info.append(`\u2022 Released on ${movie.Released}`);
+                        info.append(` \u2022 Released on ${movie.Released}`);
                         article.append(info);
 
                         //Genres
@@ -77,6 +122,23 @@
                         CreditFormatter(article, "Writers", movie.Writers)
                         CreditFormatter(article, "Actors", movie.Actors)
 
+                        //Ratings
+                        const rating = document.createElement("h3");
+                        rating.textContent = "Ratings";
+                        article.append(rating)
+                        const ratingText = document.createElement("p");
+                        if(movie.Metascore !== null && movie.imdbRating !== null){
+                            ratingText.append(`IMDB rates this movie with ${movie.imdbRating} and Metacritic with ${movie.Metascore}`);
+                        } else if(movie.Metascore !== null){
+                            ratingText.append(`Metacritic rates this movie with ${movie.Metascore}`);
+                        }
+                        else if(movie.imdbRating !== null){
+                            ratingText.append(`IMDB rates this movie with ${movie.imdbRating}`);
+                        }else{
+                            ratingText.append(`No ratings yet`);
+                        }
+                        article.append(ratingText);
+
                         bodyElement.append(article);  
                     });
 
@@ -94,6 +156,7 @@
 </head>
 
 <body>
+    <h1>Movie catalog!</h1>
 </body>
 
 </html>
